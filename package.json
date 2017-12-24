@@ -1,6 +1,6 @@
 {
   "name": "audio-stream-meter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Simple meter for showing audio stream waveform.",
   "main": "src/audio-stream-meter.js",
   "scripts": {
@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/krzaku281/audio-stream-meter/issues"
   },
-  "homepage": "https://github.com/krzaku281/audio-stream-meter#readme"
+  "homepage": "https://github.com/krzaku281/audio-stream-meter#readme",
+  "publishConfig": {
+	"registry":"https://registry.npmjs.org/"
+  }
 }
