@@ -5,7 +5,7 @@ module.exports = {
 };
 
 function createAudioStreamProcessor(audioContext, callback, config = {}) {
-	var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize || 1024);	
+	var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize || 1024, 1, 1);	
 	
 	scriptProcessor.onaudioprocess = volumeAudioStream;
 	scriptProcessor.audioStreamCallback = callback;

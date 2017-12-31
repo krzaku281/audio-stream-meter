@@ -16,6 +16,7 @@ var AudioStreamMeter = require('audio-stream-meter');
 
 navigator.mediaDevices.getUserMedia({audio:true})
 .then(stream => {
+
 	var audioContext = new AudioContext();
 				
     var mediaStream = audioContext.createMediaStreamSource(stream);
