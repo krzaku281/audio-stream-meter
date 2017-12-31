@@ -1,6 +1,6 @@
 {
   "name": "audio-stream-meter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Simple meter for showing audio stream waveform.",
   "main": "src/audio-stream-meter.js",
   "scripts": {
