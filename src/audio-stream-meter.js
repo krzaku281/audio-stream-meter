@@ -1,19 +1,25 @@
-module.exports.createAudioStreamProcessor = function(audioContext, callback, bufferSize = 1024) {
-	var scriptProcessor = audioContext.createScriptProcessor(bufferSize);	
+"use strict";
+
+module.exports = {
+	audioStreamProcessor: createAudioStreamProcessor,
+};
+
+function createAudioStreamProcessor(audioContext, callback, config = {}) {
+	var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize || 1024);	
 	
 	scriptProcessor.onaudioprocess = volumeAudioStream;
 	scriptProcessor.audioStreamCallback = callback;
 	scriptProcessor.close = close;
 
 	scriptProcessor.volume = 0;
-	scriptProcessor.configuration = {
-		waveFall: 0.95, /* (0,1) more means wave will be fall slower */
+	scriptProcessor.config = {
+		volumeFall: config.volumeFall || 0.95, /* (0,1) more means volume wave will be fall slower */
 	};
 
 	scriptProcessor.connect(audioContext.destination);
 	
 	return scriptProcessor;
-}
+};
 
 function volumeAudioStream(event) {
 	var buffer = event.inputBuffer.getChannelData(0);
@@ -23,10 +29,10 @@ function volumeAudioStream(event) {
     	sum += buffer[i] * buffer[i];
     }
     var rms =  Math.sqrt(sum / buffer.length);
-    this.volume = Math.max(rms, this.volume * this.configuration.waveFall);
+    this.volume = Math.max(rms, this.volume * this.config.volumeFall);
 	
 	this.audioStreamCallback();
-}
+};
 
 function close() {
 	this.disconnect();
