@@ -16,7 +16,6 @@ var AudioStreamMeter = require('audio-stream-meter');
 
 navigator.mediaDevices.getUserMedia({audio:true})
 .then(stream => {
-
 	var audioContext = new AudioContext();
 				
     var mediaStream = audioContext.createMediaStreamSource(stream);
@@ -39,13 +38,15 @@ navigator.mediaDevices.getUserMedia({audio:true})
 # Configuration
 ```sh
 var config = {
-	bufferSize: 1024 // default: 1024, set: [0, 256, 512, 1024, 2048, 4096, 8192, 16384] 
-	volumeFall: 0.95 // default: 0.95, set: (0,1)
+	bufferSize: 1024, // default: 1024, interval: {0, 256, 512, 1024, 2048, 4096, 8192, 16384} 
+	inputChannels: 1, // default: 1, interval: [1, 32]
+	volumeFall: 0.95, // default: 0.95, interval: (0,1)
 };
 
 var meter = AudioStreamMeter.audioStreamProcessor(audioContext, function(){}, config);
 ```
 > - bufferSize - more value create higher latency of audio sample-frames,
+> - inputChannels - how many input channels should be handling, passing more channels then exists in stream will flatten volume,
 > - volumeFall - more means volume wave will be fall slower.
 
 

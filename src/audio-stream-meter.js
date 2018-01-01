@@ -5,7 +5,11 @@ module.exports = {
 };
 
 function createAudioStreamProcessor(audioContext, callback, config = {}) {
-	var scriptProcessor = audioContext.createScriptProcessor(config.bufferSize || 1024, 1, 1);	
+	var scriptProcessor = audioContext.createScriptProcessor(
+		config.bufferSize || 1024, 
+		config.inputChannels || 1, 
+		1
+	);	
 	
 	scriptProcessor.onaudioprocess = volumeAudioStream;
 	scriptProcessor.audioStreamCallback = callback;
@@ -22,14 +26,21 @@ function createAudioStreamProcessor(audioContext, callback, config = {}) {
 };
 
 function volumeAudioStream(event) {
-	var buffer = event.inputBuffer.getChannelData(0);
-	var sum = 0;
+	var volumeSum, volumeCount, buffer;
+	volumeSum = volumeCount = 0;
+	
+	for (var i = 0 ; i < event.inputBuffer.numberOfChannels ; i++) {
+		buffer = event.inputBuffer.getChannelData(i);
 
-    for (var i = 0 ; i < buffer.length ; i++) {
-    	sum += buffer[i] * buffer[i];
-    }
-    var rms =  Math.sqrt(sum / buffer.length);
-    this.volume = Math.max(rms, this.volume * this.config.volumeFall);
+		for (var j = 0 ; j < buffer.length ; j++) {
+			volumeSum += buffer[j] * buffer[j];
+		}
+		
+		volumeCount += buffer.length;
+	}
+	
+	var rms =  Math.sqrt(volumeSum / volumeCount);
+	this.volume = Math.max(rms, this.volume * this.config.volumeFall);
 	
 	this.audioStreamCallback();
 };

@@ -1,6 +1,6 @@
 {
   "name": "audio-stream-meter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Simple meter for showing audio stream waveform.",
   "main": "src/audio-stream-meter.js",
   "scripts": {
@@ -13,7 +13,8 @@
   "keywords": [
     "audio",
     "stream",
-    "meter"
+    "meter",
+	"volume"
   ],
   "author": "Marek Krzak <krzakmarek88@gmail.com>",
   "license": "MIT",
