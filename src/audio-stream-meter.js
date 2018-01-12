@@ -11,13 +11,14 @@ function createAudioStreamProcessor(audioContext, callback, config = {}) {
 		1
 	);	
 	
-	scriptProcessor.onaudioprocess = volumeAudioStream;
-	scriptProcessor.audioStreamCallback = callback;
+	scriptProcessor.onaudioprocess = onAudioStreamProcess;
+	scriptProcessor.audioProcessCallback = callback;
 	scriptProcessor.close = close;
 
 	scriptProcessor.volume = 0;
 	scriptProcessor.config = {
 		volumeFall: config.volumeFall || 0.95, /* (0,1) more means volume wave will be fall slower */
+		throttle: config.throttle || 1, /* [1, 10] higher value means more percent of data will be omited, 1 = 100% */
 	};
 
 	scriptProcessor.connect(audioContext.destination);
@@ -25,15 +26,16 @@ function createAudioStreamProcessor(audioContext, callback, config = {}) {
 	return scriptProcessor;
 };
 
-function volumeAudioStream(event) {
-	var volumeSum, volumeCount, buffer;
+function onAudioStreamProcess(event) {
+	var volumeSum, volumeCount, buffer, sample;
 	volumeSum = volumeCount = 0;
 	
 	for (var i = 0 ; i < event.inputBuffer.numberOfChannels ; i++) {
 		buffer = event.inputBuffer.getChannelData(i);
 
-		for (var j = 0 ; j < buffer.length ; j++) {
-			volumeSum += buffer[j] * buffer[j];
+		for (var j = 0 ; j < buffer.length ; j += this.config.throttle) {
+			sample = buffer[~~j]
+			volumeSum += sample * sample;
 		}
 		
 		volumeCount += buffer.length;
@@ -42,7 +44,7 @@ function volumeAudioStream(event) {
 	var rms =  Math.sqrt(volumeSum / volumeCount);
 	this.volume = Math.max(rms, this.volume * this.config.volumeFall);
 	
-	this.audioStreamCallback();
+	this.audioProcessCallback();
 };
 
 function close() {
