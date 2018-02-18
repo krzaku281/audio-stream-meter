@@ -14,7 +14,7 @@ var AudioStreamMeter = require('audio-stream-meter');
 
 navigator.mediaDevices.getUserMedia({audio:true})
 .then(stream => {
-	var audioContext = new AudioContext();
+    var audioContext = new AudioContext();
 				
     var mediaStream = audioContext.createMediaStreamSource(stream);
     var volume = document.getElementById('volume');
@@ -41,19 +41,19 @@ var config = {
 	throttle: 1, // default: 1, interval: [1, 10]
 };
 
-var meter = AudioStreamMeter.audioStreamProcessor(audioContext, callbackFn(), config);
+var meter = AudioStreamMeter.audioStreamProcessor(audioContext, callbackFn, config);
 ```
-> - bufferSize - more value create higher latency of audio sample-frames,
-> - inputChannels - how many input channels should be handling, passing more channels then exists in stream will flatten volume,
-> - volumeFall - more means volume wave will be fall slower.
-> - throttle - sets step for which will be take samples for calculations, see percent of calculated samples by means of formula f(x) = 1 / x * 100, 
+> - bufferSize - more value create higher latency of audio sample-frames
+> - inputChannels - how many input channels should be handling, passing more channels then exists in stream will flatten volume
+> - volumeFall - more means volume wave will be fall slower
+> - throttle - sets step for which will be take samples for calculations, see percent of calculated samples by means of formula f(x) = 100 / x
 
 # Controls
 > - callbackFn() - function is invoke after each processing audio samples and can use within data from **'Output data'** paragraph. For example: *callbackFn(){ console.log(meter.volume)}*
 > - meter.close() - close and disconnect audio processing
 
 # Output data
-> - meter.volume - gives info about volume of the last package of samples - intervals [0, 1],
+> - meter.volume - gives info about volume of the last package of samples - intervals [0, 1]
 
 # Licence
 MIT
