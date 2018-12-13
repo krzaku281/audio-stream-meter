@@ -1,10 +1,9 @@
 "use strict";
 
-module.exports = {
-	audioStreamProcessor: createAudioStreamProcessor,
-};
-
-function createAudioStreamProcessor(audioContext, callback, config = {}) {
+function createAudioStreamProcessor(audioContext, callback, config) {
+	if (typeof config === 'undefined') {
+		config = {};
+	}
 	var scriptProcessor = audioContext.createScriptProcessor(
 		config.bufferSize || 1024, 
 		config.inputChannels || 1, 
@@ -50,4 +49,8 @@ function onAudioStreamProcess(event) {
 function close() {
 	this.disconnect();
 	this.onaudioprocess = null;
+};
+
+module.exports = {
+	audioStreamProcessor: createAudioStreamProcessor,
 };
